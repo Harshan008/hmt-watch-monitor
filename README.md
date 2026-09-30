@@ -26,7 +26,7 @@ Source: HMT official website
 
 | Mode (`config/targets.yml`) | How often | Notes |
 |---|---|---|
-| `near_realtime` (default) | every ~90 s inside windows | One long job per window. Free because the repo is public. |
+| `near_realtime` (default) | every ~30 s inside windows (longer when HMT is slow) | One long job per window. Free because the repo is public. |
 | `strict_free` | every 5 min (GitHub minimum) | Gentlest option, but can miss very fast sell-outs. |
 
 It is polite by design: one request at a time, a truthful `User-Agent`, and a 60 s timeout (HMT often takes

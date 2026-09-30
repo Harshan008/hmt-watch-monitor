@@ -7,7 +7,7 @@ timezone: Asia/Kolkata
 #                (recommended; free because the repository is public)
 # strict_free:   one quick check every 5 minutes (GitHub's minimum), gentlest on HMT
 mode: near_realtime
-interval_seconds: 90          # >= 30 in near_realtime, >= 300 in strict_free
+interval_seconds: 30          # >= 30 in near_realtime, >= 300 in strict_free. Watches are still checked one at a time, so a slow HMT response stretches this automatically.
 
 # Sale / restock windows in IST (24h, quoted). A job that starts up to
 # `pre_window_wait_minutes` early waits for the window to open.
