@@ -23,6 +23,7 @@ from .fetcher import Fetcher
 from .logging_utils import health_line, setup_logging
 from .parser import classify, product_view_url
 from .scheduler import active_window_end, next_window_start
+from .store_parser import classify_store, store_product_url
 from .state import TargetState, load_state, save_state
 from .telegram import TelegramNotifier, format_alert
 
@@ -92,10 +93,19 @@ class Monitor:
                 log.warning("SKIP target=%s paused until %s (blocked/rate-limited)", target.id, prev.blocked_until)
                 continue
 
-            url = product_view_url(self.cfg.base_url, target.product_id)
-            fetch = self.fetcher.get(url, referer=target.url)
-            self.requests_made += 1
-            result = classify(target.id, target.product_id, fetch)
+            if target.site == "store":
+                url = store_product_url(self.cfg.store_base_url, target.product_id)
+                # a normal page load, not an AJAX call: the .store site's WAF blocks
+                # AJAX-looking requests to some paths, so look like a browser here.
+                extra_headers = {"X-Requested-With": None, "Accept": "text/html,application/xhtml+xml"}
+                fetch = self.fetcher.get(url, referer=target.url, extra_headers=extra_headers)
+                self.requests_made += 1
+                result = classify_store(target.id, target.product_id, fetch)
+            else:
+                url = product_view_url(self.cfg.base_url, target.product_id)
+                fetch = self.fetcher.get(url, referer=target.url)
+                self.requests_made += 1
+                result = classify(target.id, target.product_id, fetch)
             now = self.clock()
             log.info(health_line(result, now))
 

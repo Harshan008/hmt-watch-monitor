@@ -72,8 +72,10 @@ class Fetcher:
     def _backoff(self, attempt: int) -> float:
         return self.cfg.backoff_base_seconds * (2 ** attempt) + self.rand() * self.cfg.jitter_seconds
 
-    def get(self, url: str, referer: Optional[str] = None) -> FetchResult:
+    def get(self, url: str, referer: Optional[str] = None, extra_headers: Optional[dict] = None) -> FetchResult:
         headers = {"Referer": referer} if referer else {}
+        if extra_headers:
+            headers.update(extra_headers)  # a value of None removes a default session header for this call
         attempts_allowed = 1 + int(self.cfg.max_retries)
         started = time.monotonic()
         last_error = None

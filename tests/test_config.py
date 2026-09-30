@@ -48,3 +48,32 @@ def test_duplicate_target_ids(raw_config):
     raw_config["targets"].append(dict(raw_config["targets"][0]))
     with pytest.raises(ConfigError, match="duplicate"):
         parse_config(raw_config)
+
+
+def test_store_site_target(raw_config):
+    raw_config["targets"].append({
+        "id": "kohinoor",
+        "name": "HMT Kohinoor",
+        "product_id": "77733243-645c-4eac-8e69-63425e1cc09b",
+        "url": "https://www.hmtwatches.store/product/77733243-645c-4eac-8e69-63425e1cc09b",
+        "enabled": True,
+        "site": "store",
+    })
+    cfg = parse_config(raw_config)
+    store_targets = [t for t in cfg.targets if t.site == "store"]
+    assert len(store_targets) == 1
+    assert store_targets[0].product_id == "77733243-645c-4eac-8e69-63425e1cc09b"
+
+
+@pytest.mark.parametrize("mutate, message", [
+    (lambda r: r["targets"][0].update(site="store", product_id="not-a-uuid"), "UUID"),
+    (lambda r: r["targets"][0].update(site="store"), "UUID"),  # numeric id, wrong for store
+    (lambda r: r["targets"][0].update(site="amazon"), "site"),
+    (lambda r: r["targets"][0].update(
+        site="store", product_id="77733243-645c-4eac-8e69-63425e1cc09b",
+        url="https://www.hmtwatches.in/product_all_details?id=x"), "url"),
+])
+def test_store_site_validation_errors(raw_config, mutate, message):
+    mutate(raw_config)
+    with pytest.raises(ConfigError, match=message):
+        parse_config(raw_config)

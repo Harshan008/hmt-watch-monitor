@@ -11,6 +11,8 @@ from tests.conftest import fixture_text
 
 IST = ZoneInfo("Asia/Kolkata")
 OOS = fixture_text("product_view_out_of_stock.json")
+STORE_OOS = fixture_text("store_product_kohinoor.html")
+STORE_SKU = "77733243-645c-4eac-8e69-63425e1cc09b"
 
 
 def in_stock_body(qty=5):
@@ -34,7 +36,7 @@ class FakeFetcher:
     def __init__(self, clock, responses):
         self.clock, self.responses, self.urls = clock, list(responses), []
 
-    def get(self, url, referer=None):
+    def get(self, url, referer=None, extra_headers=None):
         self.urls.append(url)
         self.clock.now += timedelta(seconds=35)  # HMT is slow
         r = self.responses.pop(0) if len(self.responses) > 1 else self.responses[0]
@@ -121,6 +123,22 @@ def test_telegram_failure_retries_next_cycle(raw_config, tmp_path):
     m, f, _, _ = build(raw_config, tmp_path, at(11, 57), [in_stock_body()], notifier=notifier)
     m.run()
     assert len(notifier.sent) >= 2  # retried on following cycles
+
+
+def test_checks_both_sites_in_one_cycle(raw_config, tmp_path):
+    raw_config["targets"].append({
+        "id": "kohinoor", "name": "HMT Kohinoor", "product_id": STORE_SKU,
+        "url": f"https://www.hmtwatches.store/product/{STORE_SKU}", "enabled": True, "site": "store",
+    })
+    m, f, n, _ = build(raw_config, tmp_path, at(9, 30), [OOS, STORE_OOS])
+    m.run()
+    assert f.urls == [
+        "https://www.hmtwatches.in/product_view?id=534",
+        f"https://www.hmtwatches.store/product/{STORE_SKU}",
+    ]
+    states = load_state(tmp_path / "state.json")
+    assert states["stellar_dasl10"].last_status == "OUT_OF_STOCK"
+    assert states["kohinoor"].last_status == "OUT_OF_STOCK"
 
 
 def test_force_runs_outside_window(raw_config, tmp_path):

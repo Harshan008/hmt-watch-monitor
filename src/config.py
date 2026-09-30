@@ -12,8 +12,11 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 import yaml
 
 MODES = ("strict_free", "near_realtime")
+SITES = ("in", "store")
 _ID_RE = re.compile(r"^[a-z0-9_\-]+$")
 _HHMM_RE = re.compile(r"^([01]\d|2[0-3]):([0-5]\d)$")
+_UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.I)
+SITE_DOMAINS = {"in": "hmtwatches.in", "store": "hmtwatches.store"}
 
 
 class ConfigError(ValueError):
@@ -55,10 +58,11 @@ class AlertConfig:
 class Target:
     id: str
     name: str
-    product_id: int
+    product_id: object  # int for site="in"; UUID string (sku) for site="store"
     url: str
     enabled: bool = True
     rule: str = "auto"
+    site: str = "in"
 
 
 @dataclass
@@ -74,6 +78,7 @@ class Config:
     alerts: AlertConfig
     targets: List[Target]
     base_url: str = "https://www.hmtwatches.in"
+    store_base_url: str = "https://www.hmtwatches.store"
 
     @property
     def enabled_targets(self) -> List[Target]:
@@ -176,23 +181,39 @@ def parse_config(raw) -> Config:
         if tid in seen:
             raise ConfigError(f"{where}.id: duplicate id {tid!r}")
         seen.add(tid)
+
+        site = t.get("site", "in")
+        if site not in SITES:
+            raise ConfigError(f"{where}.site: must be one of {SITES}, got {site!r}")
+        domain = SITE_DOMAINS[site]
+
         pid = t["product_id"]
-        if isinstance(pid, bool) or not isinstance(pid, int) or pid <= 0:
-            raise ConfigError(f"{where}.product_id: must be a positive integer (run: python -m src.add_target <url>)")
+        if site == "in":
+            if isinstance(pid, bool) or not isinstance(pid, int) or pid <= 0:
+                raise ConfigError(
+                    f"{where}.product_id: must be a positive integer for site 'in' "
+                    f"(run: python -m src.add_target <url>)")
+        else:  # store
+            if not isinstance(pid, str) or not _UUID_RE.match(pid):
+                raise ConfigError(
+                    f"{where}.product_id: must be a UUID string for site 'store' "
+                    f"(run: python -m src.add_target <url>)")
+            pid = pid.lower()
+
         url = t["url"]
         parsed = urlparse(url) if isinstance(url, str) else None
-        if not parsed or parsed.scheme != "https" or not parsed.netloc.endswith("hmtwatches.in"):
-            raise ConfigError(f"{where}.url: must be an https://www.hmtwatches.in/... link")
+        if not parsed or parsed.scheme != "https" or not parsed.netloc.endswith(domain):
+            raise ConfigError(f"{where}.url: must be an https://www.{domain}/... link (site: {site!r})")
         enabled = t.get("enabled", True)
         if not isinstance(enabled, bool):
             raise ConfigError(f"{where}.enabled: must be true/false")
         rule = t.get("rule", "auto")
         if rule != "auto":
             raise ConfigError(f"{where}.rule: only 'auto' is supported")
-        extra = set(t) - {"id", "name", "product_id", "url", "enabled", "rule"}
+        extra = set(t) - {"id", "name", "product_id", "url", "enabled", "rule", "site"}
         if extra:
             raise ConfigError(f"{where}: unknown keys {sorted(extra)}")
-        targets.append(Target(tid, str(t["name"]), pid, url, enabled, rule))
+        targets.append(Target(tid, str(t["name"]), pid, url, enabled, rule, site))
     if not any(t.enabled for t in targets):
         raise ConfigError("targets: at least one target must have enabled: true")
 

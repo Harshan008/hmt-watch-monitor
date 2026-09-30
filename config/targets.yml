@@ -37,8 +37,13 @@ alerts:
   alert_blocked: true         # tell me when HMT starts blocking the bot
   alert_recovery: false
 
+# HMT sells through TWO official sites (verified same owner via WHOIS: both registered
+# to "HMT Limited, Auxiliary Business Division", Bengaluru):
+#   site: in    -> hmtwatches.in     (product_id is a plain number)
+#   site: store -> hmtwatches.store  (product_id is a UUID; omit "site" defaults to "in")
+#
 # Add watches with:  python -m src.add_target "<product page link>"
-# (or copy an entry below and change it). product_id is HMT's internal number.
+# (works for either site - it auto-detects from the link). Or copy an entry below.
 targets:
   - id: stellar_dasl10_black
     name: HMT Stellar DASL 10 R Black
@@ -46,3 +51,11 @@ targets:
     url: "https://www.hmtwatches.in/product_all_details?id=eyJpdiI6IkZsd0VrdG1NdmROdVpvNTF6Vkc4K3c9PSIsInZhbHVlIjoiUnUwNmM4am9FaTRQY1BBVURlSDdkZz09IiwibWFjIjoiNTEyYTEzZTE2NTdjYmQ4YjU4MDI0ZjA0NzY1YTYzOWZhNzcxYTQ5OTE5Yjg0ODQ1Mzg1MTFhZmQzYWE0ZGUwYyIsInRhZyI6IiJ9"
     enabled: true
     rule: auto
+
+  - id: kohinoor_quartz_maroon
+    name: "HMT Kohinoor Quartz B Maroon Sunray"
+    product_id: "77733243-645c-4eac-8e69-63425e1cc09b"
+    url: "https://www.hmtwatches.store/product/77733243-645c-4eac-8e69-63425e1cc09b"
+    enabled: true
+    rule: auto
+    site: store

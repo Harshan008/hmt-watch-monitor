@@ -16,9 +16,11 @@ class FakeSession:
         self.responses = list(responses)
         self.calls = 0
         self.headers = {}
+        self.last_headers = None
 
     def get(self, url, **kwargs):
         self.calls += 1
+        self.last_headers = kwargs.get("headers")
         item = self.responses.pop(0)
         if isinstance(item, Exception):
             raise item
@@ -74,6 +76,12 @@ def test_timeout_bounded_retry():
     r = f.get("https://x")
     assert r.http_status is None and "Timeout" in r.error
     assert s.calls == 3 and len(sleeps) == 2
+
+
+def test_extra_headers_merge_with_referer():
+    f, s, _ = make([FakeResponse(200, "{}")])
+    f.get("https://x", referer="https://y", extra_headers={"X-Requested-With": None, "Accept": "text/html"})
+    assert s.last_headers == {"Referer": "https://y", "X-Requested-With": None, "Accept": "text/html"}
 
 
 def test_helpers():
