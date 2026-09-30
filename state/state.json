@@ -1,1 +1,24 @@
-{}
+{
+  "kohinoor_quartz_maroon": {
+    "last_status": null,
+    "last_alert_at": null,
+    "last_alert_kind": null,
+    "consecutive_blocks": 1,
+    "blocked_until": "2026-09-30T21:38:16+05:30",
+    "unknown_alerted": false,
+    "title": null,
+    "last_price": null,
+    "parser_version": "1.0.0"
+  },
+  "stellar_dasl10_black": {
+    "last_status": "OUT_OF_STOCK",
+    "last_alert_at": null,
+    "last_alert_kind": null,
+    "consecutive_blocks": 0,
+    "blocked_until": null,
+    "unknown_alerted": false,
+    "title": "HMT Stellar DASL 10 R Black",
+    "last_price": 11299.0,
+    "parser_version": "1.0.0"
+  }
+}
