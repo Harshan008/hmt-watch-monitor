@@ -62,14 +62,17 @@ targets:
     enabled: true
     rule: auto
 
-  # Automatic-movement sibling of the Quartz Kohinoor above; also Maroon dial
-  # (confirmed via variantDimensions.color on the .store product page). Only
-  # found on .store so far -> best-effort, may show BLOCKED from GitHub Actions
-  # (see README troubleshooting: hmtwatches.store's WAF blocks datacenter IPs).
+  # Automatic-movement sibling of the Quartz Kohinoor above; also Maroon dial.
+  # Same watch as .store sku 79ec4cbd... (same price, ₹11,199) but found here
+  # on .in too as id 986, confirmed via product_view (title matches exactly).
+  # Uses .in for the same reason as the Quartz one: .store blocks GitHub Actions.
+  # NOTE: HMT's per-product deep link for this one keeps expiring before we could
+  # capture a working copy, so "url" below points at the Kohinoor collection page
+  # instead of the exact product page - still real, still hmtwatches.in, just one
+  # click further from the watch itself.
   - id: kohinoor_automatic_maroon
-    name: "HMT Kohinoor Automatic (Maroon)"
-    product_id: "79ec4cbd-d085-48a9-9127-7c0d583d45d6"
-    url: "https://www.hmtwatches.store/product/79ec4cbd-d085-48a9-9127-7c0d583d45d6"
+    name: "HMT Kohinoor Automatic Maroon"
+    product_id: 986
+    url: "https://www.hmtwatches.in/collections?type=collection&id=51"
     enabled: true
     rule: auto
-    site: store
