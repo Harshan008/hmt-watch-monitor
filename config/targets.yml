@@ -45,13 +45,6 @@ alerts:
 # Add watches with:  python -m src.add_target "<product page link>"
 # (works for either site - it auto-detects from the link). Or copy an entry below.
 targets:
-  - id: stellar_dasl10_black
-    name: HMT Stellar DASL 10 R Black
-    product_id: 534
-    url: "https://www.hmtwatches.in/product_all_details?id=eyJpdiI6IkZsd0VrdG1NdmROdVpvNTF6Vkc4K3c9PSIsInZhbHVlIjoiUnUwNmM4am9FaTRQY1BBVURlSDdkZz09IiwibWFjIjoiNTEyYTEzZTE2NTdjYmQ4YjU4MDI0ZjA0NzY1YTYzOWZhNzcxYTQ5OTE5Yjg0ODQ1Mzg1MTFhZmQzYWE0ZGUwYyIsInRhZyI6IiJ9"
-    enabled: true
-    rule: auto
-
   # Same physical watch as the .store listing, but found on .in too (id 994) -
   # confirmed matching title/price. Uses .in because .store blocks GitHub Actions
   # (see README troubleshooting). If you ever want the .store copy back as a
@@ -62,3 +55,21 @@ targets:
     url: "https://hmtwatches.in/product_overview?id=eyJpdiI6ImdWRVgyeDJZTkZVODlyancvQzhDWHc9PSIsInZhbHVlIjoiTklWNUI0eGxWNU1xRXZ2a3o4M2ttQT09IiwibWFjIjoiMzhkN2M0NjQ5NmQ3NjgxNmJjZDExYzY0MmE1OGVhMmQ5OGEwNmYzZGFhYTkzYmJkODVhOTgxNGNmYzhjZmZkNyIsInRhZyI6IiJ9"
     enabled: true
     rule: auto
+  - id: sangam_mgss_06_turquoise_blue
+    name: "HMT Sangam MGSS 06 Turquoise Blue"
+    product_id: 1206
+    url: "https://www.hmtwatches.in/product_overview?id=eyJpdiI6Im5TL3hxL1ZBT05WQ21RV3dhWTlRSEE9PSIsInZhbHVlIjoicnNubm9nNXlRa1NRRE16RXZkT2wxZz09IiwibWFjIjoiZmE1M2Q3MWI1ZmEwYzMxZmI4ZDk0Nzg1ZjFiYjU3ODM0OTk4YjNiYjU5NGFiMDEyMjFkMDIzNzdlMWM4MjljZiIsInRhZyI6IiJ9"
+    enabled: true
+    rule: auto
+
+  # Automatic-movement sibling of the Quartz Kohinoor above; also Maroon dial
+  # (confirmed via variantDimensions.color on the .store product page). Only
+  # found on .store so far -> best-effort, may show BLOCKED from GitHub Actions
+  # (see README troubleshooting: hmtwatches.store's WAF blocks datacenter IPs).
+  - id: kohinoor_automatic_maroon
+    name: "HMT Kohinoor Automatic (Maroon)"
+    product_id: "79ec4cbd-d085-48a9-9127-7c0d583d45d6"
+    url: "https://www.hmtwatches.store/product/79ec4cbd-d085-48a9-9127-7c0d583d45d6"
+    enabled: true
+    rule: auto
+    site: store
