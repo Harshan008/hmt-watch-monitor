@@ -67,12 +67,14 @@ targets:
   # on .in too as id 986, confirmed via product_view (title matches exactly).
   # Uses .in for the same reason as the Quartz one: .store blocks GitHub Actions.
   # NOTE: HMT's per-product deep link for this one keeps expiring before we could
-  # capture a working copy, so "url" below points at the Kohinoor collection page
-  # instead of the exact product page - still real, still hmtwatches.in, just one
-  # click further from the watch itself.
+  # capture a working copy, and their own "Kohinoor collection" page is broken on
+  # their end (confirmed: shows "No Product Found" even logged into a real HMT
+  # account). So "url" below points at the general watches page instead - still
+  # real, still hmtwatches.in, just not a direct deep-link to this one watch.
+  # Use the site's own search icon there and search "Kohinoor Automatic" to find it.
   - id: kohinoor_automatic_maroon
     name: "HMT Kohinoor Automatic Maroon"
     product_id: 986
-    url: "https://www.hmtwatches.in/collections?type=collection&id=51"
+    url: "https://www.hmtwatches.in/watches"
     enabled: true
     rule: auto
