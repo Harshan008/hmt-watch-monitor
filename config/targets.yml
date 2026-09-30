@@ -78,11 +78,3 @@ targets:
     url: "https://www.hmtwatches.in/watches"
     enabled: true
     rule: auto
-
-  # TEMPORARY end-to-end test target (currently in stock) - will be removed after the test.
-  - id: test_restock_gandaberunda
-    name: "TEST - HMT Women's Gandaberunda JLSL 01"
-    product_id: 1177
-    url: "https://www.hmtwatches.in/watches"
-    enabled: true
-    rule: auto
