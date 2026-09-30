@@ -52,10 +52,13 @@ targets:
     enabled: true
     rule: auto
 
+  # Same physical watch as the .store listing, but found on .in too (id 994) -
+  # confirmed matching title/price. Uses .in because .store blocks GitHub Actions
+  # (see README troubleshooting). If you ever want the .store copy back as a
+  # second, best-effort check, add it as a separate target with site: store.
   - id: kohinoor_quartz_maroon
     name: "HMT Kohinoor Quartz B Maroon Sunray"
-    product_id: "77733243-645c-4eac-8e69-63425e1cc09b"
-    url: "https://www.hmtwatches.store/product/77733243-645c-4eac-8e69-63425e1cc09b"
+    product_id: 994
+    url: "https://hmtwatches.in/product_overview?id=eyJpdiI6ImdWRVgyeDJZTkZVODlyancvQzhDWHc9PSIsInZhbHVlIjoiTklWNUI0eGxWNU1xRXZ2a3o4M2ttQT09IiwibWFjIjoiMzhkN2M0NjQ5NmQ3NjgxNmJjZDExYzY0MmE1OGVhMmQ5OGEwNmYzZGFhYTkzYmJkODVhOTgxNGNmYzhjZmZkNyIsInRhZyI6IiJ9"
     enabled: true
     rule: auto
-    site: store
