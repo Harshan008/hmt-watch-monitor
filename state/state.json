@@ -31,5 +31,16 @@
     "title": "HMT Sangam MGSS 06 Turquoise Blue",
     "last_price": 3299.0,
     "parser_version": "1.0.0"
+  },
+  "test_restock_gandaberunda": {
+    "last_status": "OUT_OF_STOCK",
+    "last_alert_at": null,
+    "last_alert_kind": null,
+    "consecutive_blocks": 0,
+    "blocked_until": null,
+    "unknown_alerted": false,
+    "title": null,
+    "last_price": null,
+    "parser_version": "1.0.0"
   }
 }
