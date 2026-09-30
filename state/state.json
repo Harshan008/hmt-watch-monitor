@@ -1,15 +1,4 @@
 {
-  "kohinoor_automatic_maroon": {
-    "last_status": null,
-    "last_alert_at": null,
-    "last_alert_kind": null,
-    "consecutive_blocks": 1,
-    "blocked_until": "2026-09-30T22:08:00+05:30",
-    "unknown_alerted": false,
-    "title": null,
-    "last_price": null,
-    "parser_version": "1.0.0"
-  },
   "kohinoor_quartz_maroon": {
     "last_status": "OUT_OF_STOCK",
     "last_alert_at": null,
