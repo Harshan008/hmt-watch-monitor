@@ -1,0 +1,48 @@
+# HMT Watch Stock Monitor - configuration
+# Edit this file on GitHub (pencil icon) to change watches or times. No code changes needed.
+
+timezone: Asia/Kolkata
+
+# near_realtime: one GitHub job per sale window, checking every `interval_seconds`
+#                (recommended; free because the repository is public)
+# strict_free:   one quick check every 5 minutes (GitHub's minimum), gentlest on HMT
+mode: near_realtime
+interval_seconds: 90          # >= 30 in near_realtime, >= 300 in strict_free
+
+# Sale / restock windows in IST (24h, quoted). A job that starts up to
+# `pre_window_wait_minutes` early waits for the window to open.
+# NOTE: if you change these, also update the cron lines in .github/workflows/monitor.yml
+active_windows:
+  - start: "09:00"
+    end: "12:00"
+  - start: "15:00"
+    end: "17:00"
+pre_window_wait_minutes: 15
+max_session_minutes: 330      # hard stop per job (GitHub limit is 6h)
+
+request:
+  connect_timeout_seconds: 15
+  timeout_seconds: 60         # HMT often takes ~35s to answer
+  max_retries: 1              # retries only for timeouts / 5xx, never for 403/429
+  backoff_base_seconds: 5
+  jitter_seconds: 3
+  blocked_threshold: 2        # consecutive 403/429/challenge before pausing a watch
+  blocked_cooldown_minutes: 30
+  concurrency: 1
+
+alerts:
+  cooldown_minutes: 10        # min gap between two "in stock" alerts for the same watch
+  alert_possible_stock: true  # unusual data but quantity > 0 -> "check now" alert
+  alert_unknown: false
+  alert_blocked: true         # tell me when HMT starts blocking the bot
+  alert_recovery: false
+
+# Add watches with:  python -m src.add_target "<product page link>"
+# (or copy an entry below and change it). product_id is HMT's internal number.
+targets:
+  - id: stellar_dasl10_black
+    name: HMT Stellar DASL 10 R Black
+    product_id: 534
+    url: "https://www.hmtwatches.in/product_all_details?id=eyJpdiI6IkZsd0VrdG1NdmROdVpvNTF6Vkc4K3c9PSIsInZhbHVlIjoiUnUwNmM4am9FaTRQY1BBVURlSDdkZz09IiwibWFjIjoiNTEyYTEzZTE2NTdjYmQ4YjU4MDI0ZjA0NzY1YTYzOWZhNzcxYTQ5OTE5Yjg0ODQ1Mzg1MTFhZmQzYWE0ZGUwYyIsInRhZyI6IiJ9"
+    enabled: true
+    rule: auto

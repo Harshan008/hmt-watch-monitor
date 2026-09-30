@@ -1,0 +1,84 @@
+name: HMT Stock Monitor
+
+on:
+  schedule:
+    # All times are IST. Keep these in sync with active_windows in config/targets.yml.
+    # Minute 0 is avoided on purpose (GitHub is busiest at the top of the hour).
+    # 08:47-08:57 / 14:47-14:57 start early; the job waits for the window to open.
+    - cron: "47,52,57 8 * * *"
+      timezone: "Asia/Kolkata"
+    - cron: "2-57/5 9-11 * * *"
+      timezone: "Asia/Kolkata"
+    - cron: "47,52,57 14 * * *"
+      timezone: "Asia/Kolkata"
+    - cron: "2-57/5 15-16 * * *"
+      timezone: "Asia/Kolkata"
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "What to do"
+        type: choice
+        options:
+          - check-now
+          - test-telegram
+        default: check-now
+      dry_run:
+        description: "Dry run (log only, no Telegram message)"
+        type: boolean
+        default: false
+
+# Only one monitor job at a time. In near_realtime mode the job that is already
+# polling keeps running; later schedule ticks wait (and exit quickly afterwards).
+concurrency:
+  group: hmt-monitor
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref_name }}   # latest state, not the commit that queued this run
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run monitor
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+          RUN_ACTION: ${{ inputs.action || 'scheduled' }}
+        run: |
+          case "$RUN_ACTION" in
+            test-telegram) python -m src.main --test-telegram ;;
+            check-now)     python -m src.main --force ;;
+            *)             python -m src.main ;;
+          esac
+
+      - name: Save state (only if it changed)
+        if: always() && inputs.action != 'test-telegram'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/state.json
+          if git diff --cached --quiet; then
+            echo "state unchanged"
+            exit 0
+          fi
+          git commit -m "chore(state): update monitor state" --quiet
+          for i in 1 2 3; do
+            if git pull --rebase --quiet && git push --quiet; then exit 0; fi
+            sleep 5
+          done
+          echo "::warning::could not push state; next run will reconcile"
