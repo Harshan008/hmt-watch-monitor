@@ -2,10 +2,10 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import time
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 from urllib.parse import urlparse
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -122,7 +122,7 @@ def parse_config(raw) -> Config:
     try:
         tz = ZoneInfo(tz_name)
     except (ZoneInfoNotFoundError, ValueError):
-        raise ConfigError(f"timezone: unknown timezone {tz_name!r}")
+        raise ConfigError(f"timezone: unknown timezone {tz_name!r}") from None
 
     mode = raw.get("mode", "strict_free")
     if mode not in MODES:
@@ -231,5 +231,5 @@ def load_config(path) -> Config:
     try:
         raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     except yaml.YAMLError as exc:
-        raise ConfigError(f"{path}: invalid YAML: {exc}")
+        raise ConfigError(f"{path}: invalid YAML: {exc}") from exc
     return parse_config(raw)

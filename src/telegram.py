@@ -10,8 +10,7 @@ from typing import Callable, Optional
 import requests
 
 from .config import Target
-from .detector import (BLOCKED_ALERT, IN_STOCK_ALERT, POSSIBLE_STOCK_ALERT, RECOVERED_ALERT,
-                       UNKNOWN_ALERT, Alert)
+from .detector import BLOCKED_ALERT, IN_STOCK_ALERT, POSSIBLE_STOCK_ALERT, RECOVERED_ALERT, UNKNOWN_ALERT, Alert
 
 log = logging.getLogger(__name__)
 API = "https://api.telegram.org/bot{token}/sendMessage"

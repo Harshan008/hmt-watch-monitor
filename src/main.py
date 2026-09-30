@@ -23,8 +23,8 @@ from .fetcher import Fetcher
 from .logging_utils import health_line, setup_logging
 from .parser import classify, product_view_url
 from .scheduler import active_window_end, next_window_start
-from .store_parser import classify_store, store_product_url
 from .state import TargetState, load_state, save_state
+from .store_parser import classify_store, store_product_url
 from .telegram import TelegramNotifier, format_alert
 
 log = logging.getLogger("hmt")

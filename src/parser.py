@@ -5,9 +5,10 @@ Verified 2026-09-30: the site's own quick-view request
 returns JSON like
     {"product_details": {"id": 534, "product_title": "...", "product_price": 11299,
                          "in_stock": "no", "quantity": 0, ...}, ...}
-Only the out-of-stock shape ("no", 0) has been observed so far. The in-stock value is
-assumed to be "yes"/quantity > 0; anything unexpected becomes UNKNOWN (never IN_STOCK),
-with `possible_stock` set when quantity > 0 so the user can still be told to look.
+Both shapes have been observed live: out of stock is ("no", 0) and in stock is
+("yes", quantity > 0), verified 2026-09-30 with an end-to-end alert test. Anything
+unexpected becomes UNKNOWN (never IN_STOCK), with `possible_stock` set when
+quantity > 0 so the user can still be told to look.
 """
 from __future__ import annotations
 

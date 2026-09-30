@@ -2,8 +2,16 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from src.config import AlertConfig, RequestConfig
-from src.detector import (BLOCKED_ALERT, IN_STOCK_ALERT, POSSIBLE_STOCK_ALERT, RECOVERED_ALERT,
-                          decide, is_paused, mark_failed, mark_sent)
+from src.detector import (
+    BLOCKED_ALERT,
+    IN_STOCK_ALERT,
+    POSSIBLE_STOCK_ALERT,
+    RECOVERED_ALERT,
+    decide,
+    is_paused,
+    mark_failed,
+    mark_sent,
+)
 from src.models import CheckResult, Status
 from src.state import TargetState
 

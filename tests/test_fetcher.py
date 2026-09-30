@@ -60,7 +60,8 @@ def test_challenge_page_is_blocked():
 
 
 def test_5xx_retries_with_exponential_backoff_then_errors():
-    f, s, sleeps = make([FakeResponse(502), FakeResponse(503), FakeResponse(502)], backoff_base_seconds=5, jitter_seconds=2)
+    responses = [FakeResponse(502), FakeResponse(503), FakeResponse(502)]
+    f, s, sleeps = make(responses, backoff_base_seconds=5, jitter_seconds=2)
     r = f.get("https://x")
     assert s.calls == 3 and r.error == "server error 502" and not r.blocked
     assert sleeps == [5 + 1.0, 10 + 1.0]

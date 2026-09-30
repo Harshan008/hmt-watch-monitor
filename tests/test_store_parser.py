@@ -2,8 +2,7 @@ import json
 import re
 
 from src.models import FetchResult, Status
-from src.store_parser import (SKU_RE, classify_store, extract_sku_from_url, parse_store_product,
-                              store_product_url)
+from src.store_parser import SKU_RE, classify_store, extract_sku_from_url, parse_store_product, store_product_url
 from tests.conftest import fixture_text
 
 REAL_FIXTURE = fixture_text("store_product_kohinoor.html")
@@ -16,7 +15,8 @@ def _next_data(fixture=REAL_FIXTURE):
 
 def _fixture_with(**availability_overrides):
     data = _next_data()
-    avail = data["props"]["pageProps"]["catalog"]["variantsInfo"][0]["attributes"]["buyingOptions"]["singlePurchase"]["availability"]
+    attrs = data["props"]["pageProps"]["catalog"]["variantsInfo"][0]["attributes"]
+    avail = attrs["buyingOptions"]["singlePurchase"]["availability"]
     avail.update(availability_overrides)
     return f'<html><body><script id="__NEXT_DATA__" type="application/json">{json.dumps(data)}</script></body></html>'
 

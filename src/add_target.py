@@ -16,7 +16,7 @@ import time
 from pathlib import Path
 from urllib.parse import urlparse
 
-from .config import ConfigError, SITE_DOMAINS, load_config
+from .config import SITE_DOMAINS, ConfigError, load_config
 from .fetcher import Fetcher
 from .logging_utils import setup_logging
 from .parser import classify, extract_product_id_and_title, product_view_url
