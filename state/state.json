@@ -1,15 +1,4 @@
 {
-  "kohinoor_quartz_maroon": {
-    "last_status": null,
-    "last_alert_at": "2026-09-30T21:39:22+05:30",
-    "last_alert_kind": "blocked",
-    "consecutive_blocks": 2,
-    "blocked_until": "2026-09-30T22:09:22+05:30",
-    "unknown_alerted": false,
-    "title": null,
-    "last_price": null,
-    "parser_version": "1.0.0"
-  },
   "stellar_dasl10_black": {
     "last_status": "OUT_OF_STOCK",
     "last_alert_at": null,
