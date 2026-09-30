@@ -1,4 +1,15 @@
 {
+  "kohinoor_automatic_maroon": {
+    "last_status": null,
+    "last_alert_at": null,
+    "last_alert_kind": null,
+    "consecutive_blocks": 1,
+    "blocked_until": "2026-09-30T22:08:00+05:30",
+    "unknown_alerted": false,
+    "title": null,
+    "last_price": null,
+    "parser_version": "1.0.0"
+  },
   "kohinoor_quartz_maroon": {
     "last_status": "OUT_OF_STOCK",
     "last_alert_at": null,
@@ -8,6 +19,17 @@
     "unknown_alerted": false,
     "title": "HMT Kohinoor Quartz B Maroon Sunray",
     "last_price": 2899.0,
+    "parser_version": "1.0.0"
+  },
+  "sangam_mgss_06_turquoise_blue": {
+    "last_status": "OUT_OF_STOCK",
+    "last_alert_at": null,
+    "last_alert_kind": null,
+    "consecutive_blocks": 0,
+    "blocked_until": null,
+    "unknown_alerted": false,
+    "title": "HMT Sangam MGSS 06 Turquoise Blue",
+    "last_price": 3299.0,
     "parser_version": "1.0.0"
   }
 }
